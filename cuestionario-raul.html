@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario para Raúl — Mejora de Página Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080c0a;
+    --card: #111a14;
+    --card2: #0f1a12;
+    --green: #22c55e;
+    --green-glow: rgba(34,197,94,0.10);
+    --white: #f0f5f1;
+    --muted: #6b7d6e;
+    --border: rgba(34,197,94,0.14);
+    --red: #ef4444;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  /* BG */
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cline x1='0' y1='64' x2='64' y2='0' stroke='%2322c55e' stroke-width='0.6'/%3E%3Cline x1='-16' y1='64' x2='48' y2='0' stroke='%2322c55e' stroke-width='0.25'/%3E%3Cline x1='16' y1='64' x2='80' y2='0' stroke='%2322c55e' stroke-width='0.25'/%3E%3C/svg%3E"); background-size: 64px 64px; opacity: 0.04; pointer-events: none; z-index: 0; }
+
+  .page { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 6rem; position: relative; z-index: 1; }
+
+  /* HEADER */
+  .header { margin-bottom: 3rem; }
+  .header-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--green); display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .header-eyebrow::before { content: ''; width: 2rem; height: 1px; background: var(--green); }
+  .header-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 7vw, 5rem); line-height: 0.95; letter-spacing: 0.03em; margin-bottom: 1rem; }
+  .header-title span { color: var(--green); }
+  .header-sub { font-size: 0.97rem; color: var(--muted); line-height: 1.75; max-width: 54ch; }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 2.5rem; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .progress-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .progress-count { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: var(--green); letter-spacing: 0.1em; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* SECTIONS */
+  .form-section { margin-bottom: 2.5rem; background: var(--card); border: 1px solid var(--border); overflow: hidden; }
+  .form-section-header { padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+  .section-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--black); background: var(--green); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .section-title-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.05em; color: var(--white); }
+  .section-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
+  .form-section-body { padding: 1.8rem; display: flex; flex-direction: column; gap: 1.4rem; }
+
+  /* FIELD */
+  .field { display: flex; flex-direction: column; gap: 0.45rem; }
+  .field-label { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); display: flex; align-items: center; gap: 0.4rem; }
+  .field-required { color: var(--red); font-size: 0.8rem; }
+  .field-hint { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .field-input, .field-select, .field-textarea { width: 100%; background: var(--black); border: 1px solid var(--border); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; padding: 0.8rem 1rem; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--green); }
+  .field-textarea { resize: vertical; min-height: 110px; line-height: 1.65; }
+  .field-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2322c55e' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+  .field-select option { background: #111a14; }
+
+  /* RADIO / CHECKBOX GROUP */
+  .radio-group, .check-group { display: flex; flex-direction: column; gap: 0.55rem; }
+  .radio-group.inline, .check-group.inline { flex-direction: row; flex-wrap: wrap; gap: 0.55rem; }
+  .radio-item, .check-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--black); border: 1px solid var(--border); cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 0.92rem; color: var(--white); }
+  .radio-item:hover, .check-item:hover { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.04); }
+  .radio-item input, .check-item input { display: none; }
+  .radio-item.checked, .check-item.checked { border-color: var(--green); background: var(--green-glow); }
+  .radio-dot { width: 16px; height: 16px; border: 1.5px solid var(--muted); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s; }
+  .radio-item.checked .radio-dot { border-color: var(--green); }
+  .radio-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green); opacity: 0; transition: opacity 0.2s; }
+  .radio-item.checked .radio-dot::after { opacity: 1; }
+  .check-box { width: 16px; height: 16px; border: 1.5px solid var(--muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; font-size: 0.6rem; }
+  .check-item.checked .check-box { border-color: var(--green); background: var(--green); color: var(--black); }
+
+  /* SCALE */
+  .scale-wrap { display: flex; gap: 0.4rem; }
+  .scale-btn { flex: 1; padding: 0.7rem 0; background: var(--black); border: 1px solid var(--border); color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .scale-btn:hover { border-color: rgba(34,197,94,0.3); color: var(--white); }
+  .scale-btn.active { border-color: var(--green); background: var(--green-glow); color: var(--green); }
+  .scale-labels { display: flex; justify-content: space-between; margin-top: 0.4rem; }
+  .scale-label { font-size: 0.7rem; color: var(--muted); font-family: 'Montserrat', sans-serif; }
+
+  /* FIELD ROW */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* SUBMIT */
+  .submit-area { text-align: center; margin-top: 1rem; }
+  .submit-btn { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; color: var(--black); background: var(--green); border: none; padding: 1.1rem 3rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 100%; max-width: 360px; }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.18); }
+  .submit-note { font-size: 0.78rem; color: var(--muted); margin-top: 0.8rem; line-height: 1.6; }
+
+  /* SUCCESS */
+  #success-screen { display: none; text-align: center; padding: 4rem 2rem; background: var(--card); border: 1px solid var(--border); position: relative; overflow: hidden; }
+  #success-screen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--green), transparent); }
+  .success-icon { font-size: 3.5rem; margin-bottom: 1.2rem; }
+  .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.04em; color: var(--white); margin-bottom: 0.5rem; }
+  .success-title span { color: var(--green); }
+  .success-sub { font-size: 0.97rem; color: var(--muted); line-height: 1.7; max-width: 44ch; margin: 0 auto 2rem; }
+  .success-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-wpp { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--black); background: var(--green); border: none; padding: 0.85rem 1.8rem; cursor: pointer; text-decoration: none; transition: opacity 0.2s; display: inline-block; }
+  .btn-wpp:hover { opacity: 0.88; }
+  .btn-reset { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--border); padding: 0.85rem 1.8rem; cursor: pointer; transition: color 0.2s; }
+  .btn-reset:hover { color: var(--white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .form-section { animation: fadeUp 0.5s ease both; }
+  .form-section:nth-child(2) { animation-delay: 0.05s; }
+  .form-section:nth-child(3) { animation-delay: 0.10s; }
+  .form-section:nth-child(4) { animation-delay: 0.15s; }
+  .form-section:nth-child(5) { animation-delay: 0.20s; }
+  .form-section:nth-child(6) { animation-delay: 0.25s; }
+  .form-section:nth-child(7) { animation-delay: 0.30s; }
+
+  @media (max-width: 600px) {
+    .field-row { grid-template-columns: 1fr; }
+    .scale-wrap { gap: 0.25rem; }
+    .scale-btn { padding: 0.6rem 0; font-size: 0.75rem; }
+    .radio-group.inline { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-eyebrow">Cuestionario interno</div>
+    <h1 class="header-title">RAÚL,<br>CONTANOS<br><span>TODO.</span></h1>
+    <p class="header-sub">Este formulario es para que puedas contarnos lo que sabés, lo que querés y lo que no te gusta, y así mejorar tu página juntos. No hay respuestas correctas ni incorrectas.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Tu progreso</span>
+      <span class="progress-count" id="progress-text">0 / 7 secciones</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="form-area">
+
+  <!-- 1. SOBRE EL NEGOCIO -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">1</div>
+      <div><div class="section-title-text">Sobre tu negocio</div><div class="section-subtitle">Quiénes sos y a dónde apuntás</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Cómo describirías tu trabajo en una sola frase? <span class="field-required">*</span></label>
+        <div class="field-hint">Ej: "Ayudo a personas a bajar de peso de forma sostenible en Misiones."</div>
+        <textarea class="field-textarea" id="f-descripcion" placeholder="Escribí tu frase acá..." style="min-height:80px" oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cuál es tu cliente ideal? <span class="field-required">*</span></label>
+        <div class="field-hint">Edad, género, situación de vida, qué problema tiene...</div>
+        <textarea class="field-textarea" id="f-cliente-ideal" placeholder="Ej: Mujeres de 25 a 40 años que quieren retomar el ejercicio después del embarazo..." oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cuál es tu diferencial respecto a otros trainers? <span class="field-required">*</span></label>
+        <div class="field-hint">¿Qué tenés vos que no tiene otro personal trainer de Misiones?</div>
+        <textarea class="field-textarea" id="f-diferencial" placeholder="Lo que me hace único es..." oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cuántos clientes activos tenés hoy?</label>
+        <div class="radio-group inline" id="rg-clientes">
+          <label class="radio-item" onclick="selectRadio(this,'rg-clientes')"><input type="radio" name="clientes"><div class="radio-dot"></div> Ninguno aún</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-clientes')"><input type="radio" name="clientes"><div class="radio-dot"></div> 1 a 5</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-clientes')"><input type="radio" name="clientes"><div class="radio-dot"></div> 6 a 15</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-clientes')"><input type="radio" name="clientes"><div class="radio-dot"></div> Más de 15</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. SERVICIOS Y PRECIOS -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">2</div>
+      <div><div class="section-title-text">Servicios y precios</div><div class="section-subtitle">Lo que vendés y cuánto vale</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Qué servicios ofrecés? (Seleccioná todos los que apliquen)</label>
+        <div class="check-group" id="cg-servicios">
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Entrenamiento presencial 1 a 1</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Entrenamiento online (seguimiento por WhatsApp/video)</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Rutinas personalizadas (documento/PDF)</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Asesoría nutricional</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Plan combinado entrenamiento + nutrición</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-servicios')"><div class="check-box">✓</div> Clases grupales</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Ya definiste precios? <span class="field-required">*</span></label>
+        <div class="radio-group" id="rg-precios">
+          <label class="radio-item" onclick="selectRadio(this,'rg-precios')"><input type="radio" name="precios"><div class="radio-dot"></div> Sí, tengo precios definidos para todos mis servicios</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-precios')"><input type="radio" name="precios"><div class="radio-dot"></div> Tengo algunos precios pero todavía estoy ajustando</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-precios')"><input type="radio" name="precios"><div class="radio-dot"></div> No, quiero definirlos próximamente</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Si ya tenés precios, contanos (opcional)</label>
+        <div class="field-hint">Podés poner rangos, ej: "Rutina personalizada: $X — Plan mensual: $Y"</div>
+        <textarea class="field-textarea" id="f-precios-detalle" placeholder="Ej: Plan mensual online: $20.000 / Rutina sola: $8.000..." style="min-height:90px"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. PRESENCIA ONLINE -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">3</div>
+      <div><div class="section-title-text">Presencia online</div><div class="section-subtitle">Cómo te encontrás en internet hoy</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Usuario de Instagram</label>
+          <input class="field-input" type="text" id="f-instagram" placeholder="@raullencina7">
+        </div>
+        <div class="field">
+          <label class="field-label">Número de WhatsApp</label>
+          <input class="field-input" type="tel" id="f-whatsapp" placeholder="+54 9 376 482-8210">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cuántos seguidores tenés en Instagram?</label>
+        <div class="radio-group inline" id="rg-seguidores">
+          <label class="radio-item" onclick="selectRadio(this,'rg-seguidores')"><input type="radio" name="segs"><div class="radio-dot"></div> Menos de 500</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-seguidores')"><input type="radio" name="segs"><div class="radio-dot"></div> 500 a 2.000</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-seguidores')"><input type="radio" name="segs"><div class="radio-dot"></div> 2.000 a 10.000</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-seguidores')"><input type="radio" name="segs"><div class="radio-dot"></div> Más de 10.000</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Qué tipo de contenido publicás en Instagram?</label>
+        <div class="check-group" id="cg-contenido">
+          <label class="check-item" onclick="toggleCheck(this,'cg-contenido')"><div class="check-box">✓</div> Fotos de entrenamientos / ejercicios</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-contenido')"><div class="check-box">✓</div> Reels con tips o rutinas</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-contenido')"><div class="check-box">✓</div> Resultados de alumnos (antes/después)</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-contenido')"><div class="check-box">✓</div> Contenido educativo sobre nutrición</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-contenido')"><div class="check-box">✓</div> Casi no publico / estoy arrancando</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cómo suelen contactarte hoy los potenciales clientes?</label>
+        <div class="radio-group" id="rg-contacto-actual">
+          <label class="radio-item" onclick="selectRadio(this,'rg-contacto-actual')"><input type="radio" name="contacto"><div class="radio-dot"></div> Por Instagram (DM)</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-contacto-actual')"><input type="radio" name="contacto"><div class="radio-dot"></div> Por WhatsApp directamente</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-contacto-actual')"><input type="radio" name="contacto"><div class="radio-dot"></div> Me recomiendan de boca en boca</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-contacto-actual')"><input type="radio" name="contacto"><div class="radio-dot"></div> Todavía no tengo un flujo claro</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. TU PÁGINA WEB -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">4</div>
+      <div><div class="section-title-text">Tu página web</div><div class="section-subtitle">Qué te gusta, qué cambiarías</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Qué es lo que más te gusta de la página actual? <span class="field-required">*</span></label>
+        <textarea class="field-textarea" id="f-gusta" placeholder="Ej: El diseño oscuro, la sección del blog, el cuestionario de clientes..." oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Qué es lo que menos te gusta o cambiarías? <span class="field-required">*</span></label>
+        <textarea class="field-textarea" id="f-no-gusta" placeholder="Ej: Quiero cambiar los textos, agregar fotos reales, cambiar algún color..." oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Tenés fotos propias para usar en la web?</label>
+        <div class="radio-group" id="rg-fotos">
+          <label class="radio-item" onclick="selectRadio(this,'rg-fotos')"><input type="radio" name="fotos"><div class="radio-dot"></div> Sí, tengo fotos de buena calidad listas para usar</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-fotos')"><input type="radio" name="fotos"><div class="radio-dot"></div> Tengo algunas pero no son muy profesionales</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-fotos')"><input type="radio" name="fotos"><div class="radio-dot"></div> No tengo, habría que sacar nuevas</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-fotos')"><input type="radio" name="fotos"><div class="radio-dot"></div> Prefiero usar imágenes de stock por ahora</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Hay alguna sección que te gustaría agregar a la página?</label>
+        <div class="check-group" id="cg-secciones">
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Galería de resultados de alumnos</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Testimonios / reseñas de clientes</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Preguntas frecuentes (FAQ)</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Video de presentación tuyo</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Página de ventas para cada servicio</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Sistema de turnos / reservas</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-secciones')"><div class="check-box">✓</div> Tienda (venta de rutinas digitales)</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Páginas de referencia que te gusten visualmente?</label>
+        <div class="field-hint">Links, nombres de trainers, cualquier web que te parezca buena.</div>
+        <textarea class="field-textarea" id="f-referencias" placeholder="Ej: me gusta cómo se ve fulano.com, o el Instagram de @trainer_x..." style="min-height:80px"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. BLOG Y CONTENIDO -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">5</div>
+      <div><div class="section-title-text">Blog y contenido</div><div class="section-subtitle">Qué vas a publicar y con qué frecuencia</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Con qué frecuencia podés publicar artículos en el blog? <span class="field-required">*</span></label>
+        <div class="radio-group" id="rg-frecuencia">
+          <label class="radio-item" onclick="selectRadio(this,'rg-frecuencia')"><input type="radio" name="frecuencia"><div class="radio-dot"></div> Una vez por semana</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-frecuencia')"><input type="radio" name="frecuencia"><div class="radio-dot"></div> Una o dos veces por mes</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-frecuencia')"><input type="radio" name="frecuencia"><div class="radio-dot"></div> Cuando tenga algo para decir (sin frecuencia fija)</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-frecuencia')"><input type="radio" name="frecuencia"><div class="radio-dot"></div> Todavía no sé, necesito organizarme</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Sobre qué temas te sentís más cómodo escribiendo?</label>
+        <div class="check-group" id="cg-temas">
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Entrenamiento de fuerza e hipertrofia</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Nutrición y alimentación deportiva</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Pérdida de peso y composición corporal</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Hábitos, motivación y mentalidad</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Biología y ciencia del ejercicio</label>
+          <label class="check-item" onclick="toggleCheck(this,'cg-temas')"><div class="check-box">✓</div> Tips prácticos para principiantes</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Tenés alguna idea de artículo que quieras publicar pronto?</label>
+        <textarea class="field-textarea" id="f-ideas-blog" placeholder="Ej: quiero escribir sobre los errores en el cardio, o sobre cómo organizar la comida semanal..." style="min-height:80px"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. OBJETIVOS DE LA PÁGINA -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">6</div>
+      <div><div class="section-title-text">Objetivos de la página</div><div class="section-subtitle">Qué resultados esperás</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Cuál es el objetivo número 1 de tu página web? <span class="field-required">*</span></label>
+        <div class="radio-group" id="rg-objetivo-web">
+          <label class="radio-item" onclick="selectRadio(this,'rg-objetivo-web')"><input type="radio" name="obj-web"><div class="radio-dot"></div> Que la gente me contacte para contratar mis servicios</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-objetivo-web')"><input type="radio" name="obj-web"><div class="radio-dot"></div> Que me conozcan y sigan en Instagram</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-objetivo-web')"><input type="radio" name="obj-web"><div class="radio-dot"></div> Que lean mi blog y compartan el contenido</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-objetivo-web')"><input type="radio" name="obj-web"><div class="radio-dot"></div> Vender rutinas o recursos digitales directamente</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-objetivo-web')"><input type="radio" name="obj-web"><div class="radio-dot"></div> Todas las anteriores en igual medida</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿En cuánto tiempo querés empezar a ver resultados con la página?</label>
+        <div class="radio-group inline" id="rg-tiempo">
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo')"><input type="radio" name="tiempo"><div class="radio-dot"></div> 1 mes</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo')"><input type="radio" name="tiempo"><div class="radio-dot"></div> 3 meses</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo')"><input type="radio" name="tiempo"><div class="radio-dot"></div> 6 meses</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo')"><input type="radio" name="tiempo"><div class="radio-dot"></div> Sin apuro, lo voy construyendo</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">¿Cuánto tiempo por semana podés dedicarle a la página (blog, actualizar info, etc.)?</label>
+        <div class="radio-group inline" id="rg-tiempo-semanal">
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo-semanal')"><input type="radio" name="tiempo-sem"><div class="radio-dot"></div> Menos de 1 hora</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo-semanal')"><input type="radio" name="tiempo-sem"><div class="radio-dot"></div> 1 a 3 horas</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo-semanal')"><input type="radio" name="tiempo-sem"><div class="radio-dot"></div> 3 a 6 horas</label>
+          <label class="radio-item" onclick="selectRadio(this,'rg-tiempo-semanal')"><input type="radio" name="tiempo-sem"><div class="radio-dot"></div> Más de 6 horas</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 7. LIBRE -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="section-num">7</div>
+      <div><div class="section-title-text">Espacio libre</div><div class="section-subtitle">Lo que quieras agregar</div></div>
+    </div>
+    <div class="form-section-body">
+
+      <div class="field">
+        <label class="field-label">¿Hay algo que quieras contarnos que no cubrimos arriba?</label>
+        <textarea class="field-textarea" id="f-libre" placeholder="Cualquier idea, queja, duda, cosa que se te ocurrió mientras llenabas esto..." oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label">En general, ¿qué tan conforme estás con la página hasta ahora?</label>
+        <div class="scale-wrap" id="scale-satisfaccion">
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',1)">1</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',2)">2</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',3)">3</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',4)">4</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',5)">5</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',6)">6</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',7)">7</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',8)">8</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',9)">9</button>
+          <button class="scale-btn" onclick="selectScale(this,'scale-satisfaccion',10)">10</button>
+        </div>
+        <div class="scale-labels">
+          <span class="scale-label">Nada conforme</span>
+          <span class="scale-label">Muy conforme</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area">
+    <button class="submit-btn" onclick="submitForm()">Enviar respuestas por WhatsApp 💬</button>
+    <p class="submit-note">Al hacer clic se va a abrir WhatsApp con todas tus respuestas listas para enviar.<br>No se guardan datos en ningún servidor.</p>
+  </div>
+
+  </div><!-- end form-area -->
+
+  <!-- SUCCESS -->
+  <div id="success-screen">
+    <div class="success-icon">✅</div>
+    <div class="success-title">¡GRACIAS,<br><span>RAÚL!</span></div>
+    <p class="success-sub">Tus respuestas ya están en camino. Las vamos a revisar y te preparamos las próximas mejoras concretas para la página.</p>
+    <div class="success-actions">
+      <button class="btn-reset" onclick="resetForm()">Modificar respuestas</button>
+    </div>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+const scaleValues = {};
+const radioValues = {};
+
+function selectRadio(el, groupId) {
+  document.querySelectorAll(`#${groupId} .radio-item`).forEach(i => i.classList.remove('checked'));
+  el.classList.add('checked');
+  radioValues[groupId] = el.textContent.trim();
+  updateProgress();
+}
+
+function toggleCheck(el, groupId) {
+  el.classList.toggle('checked');
+  updateProgress();
+}
+
+function selectScale(btn, groupId, val) {
+  document.querySelectorAll(`#${groupId} .scale-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  scaleValues[groupId] = val;
+  updateProgress();
+}
+
+function updateProgress() {
+  const required = ['f-descripcion','f-cliente-ideal','f-diferencial','rg-precios','f-gusta','f-no-gusta','rg-frecuencia','rg-objetivo-web'];
+  let filled = 0;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.tagName === 'TEXTAREA' && el.value.trim().length > 3) filled++;
+    else if (radioValues[id]) filled++;
+  });
+  // Map to 7 sections
+  const pct = Math.min(100, Math.round((filled / required.length) * 100));
+  const secDone = Math.round((filled / required.length) * 7);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').value = `${secDone} / 7 secciones`;
+  document.getElementById('progress-text').textContent = `${secDone} / 7 secciones`;
+}
+
+function getChecked(groupId) {
+  const items = document.querySelectorAll(`#${groupId} .check-item.checked`);
+  return Array.from(items).map(i => i.textContent.trim()).join(', ') || '—';
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el && el.value.trim() ? el.value.trim() : '—';
+}
+
+function submitForm() {
+  const lines = [
+    `Hola! Te mando las respuestas del cuestionario de mejora de página 📋\n`,
+    `──────────────────────────`,
+    `🏢 SOBRE EL NEGOCIO`,
+    `Descripción: ${val('f-descripcion')}`,
+    `Cliente ideal: ${val('f-cliente-ideal')}`,
+    `Diferencial: ${val('f-diferencial')}`,
+    `Clientes activos: ${radioValues['rg-clientes'] || '—'}`,
+    ``,
+    `──────────────────────────`,
+    `💼 SERVICIOS Y PRECIOS`,
+    `Servicios: ${getChecked('cg-servicios')}`,
+    `Precios definidos: ${radioValues['rg-precios'] || '—'}`,
+    `Detalle precios: ${val('f-precios-detalle')}`,
+    ``,
+    `──────────────────────────`,
+    `📱 PRESENCIA ONLINE`,
+    `Instagram: ${val('f-instagram')}`,
+    `WhatsApp: ${val('f-whatsapp')}`,
+    `Seguidores: ${radioValues['rg-seguidores'] || '—'}`,
+    `Contenido publicado: ${getChecked('cg-contenido')}`,
+    `Cómo lo contactan hoy: ${radioValues['rg-contacto-actual'] || '—'}`,
+    ``,
+    `──────────────────────────`,
+    `🌐 PÁGINA WEB`,
+    `Lo que más le gusta: ${val('f-gusta')}`,
+    `Lo que cambiaría: ${val('f-no-gusta')}`,
+    `Fotos propias: ${radioValues['rg-fotos'] || '—'}`,
+    `Secciones a agregar: ${getChecked('cg-secciones')}`,
+    `Referencias visuales: ${val('f-referencias')}`,
+    ``,
+    `──────────────────────────`,
+    `📝 BLOG`,
+    `Frecuencia de publicación: ${radioValues['rg-frecuencia'] || '—'}`,
+    `Temas de interés: ${getChecked('cg-temas')}`,
+    `Ideas de artículos: ${val('f-ideas-blog')}`,
+    ``,
+    `──────────────────────────`,
+    `🎯 OBJETIVOS`,
+    `Objetivo principal de la web: ${radioValues['rg-objetivo-web'] || '—'}`,
+    `Tiempo para ver resultados: ${radioValues['rg-tiempo'] || '—'}`,
+    `Tiempo semanal disponible: ${radioValues['rg-tiempo-semanal'] || '—'}`,
+    ``,
+    `──────────────────────────`,
+    `💬 ESPACIO LIBRE`,
+    `Comentario libre: ${val('f-libre')}`,
+    `Satisfacción actual (1-10): ${scaleValues['scale-satisfaccion'] || '—'}`,
+  ];
+
+  const msg = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/5493764788332?text=${msg}`, '_blank');
+
+  document.getElementById('form-area').style.display = 'none';
+  document.getElementById('success-screen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('form-area').style.display = 'block';
+  document.getElementById('success-screen').style.display = 'none';
+}
+</script>
+</body>
+</html>
